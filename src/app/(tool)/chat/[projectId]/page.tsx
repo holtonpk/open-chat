@@ -11,7 +11,7 @@ import {Loader} from "lucide-react";
 import Link from "next/link";
 import {ProjectFull} from "@/lib/types";
 
-const ChatPage = ({params}: {params: {projectId: string}}) => {
+const ChatPage = async ({params}: {params: {projectId: string}}) => {
   const [project, setProject] = useState<ProjectFull | null>(null);
   const projectId = params.projectId;
 
