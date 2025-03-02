@@ -11,7 +11,13 @@ import {Loader} from "lucide-react";
 import Link from "next/link";
 import {ProjectFull} from "@/lib/types";
 
-const ChatPage = ({params}: {params: {projectId: string}}) => {
+interface PageProps {
+  params: {
+    projectId: string;
+  };
+}
+
+export default function ChatPage({params}: PageProps) {
   const [project, setProject] = useState<ProjectFull | null>(null);
   const unwrappedParams = use(params as unknown as Usable<{projectId: string}>);
   const projectId = unwrappedParams.projectId;
@@ -45,20 +51,12 @@ const ChatPage = ({params}: {params: {projectId: string}}) => {
   console.log("pp", project);
 
   return (
-    <div className="w-full relative overflow-hidden">
-      {project ? (
-        // <Project project={project} />
-        <ChatBody project={project} />
-      ) : (
-        <div className="w-full h-screen flex flex-col items-center justify-center">
-          <Loader className="w-10 h-10 animate-spin" />
-        </div>
-      )}
+    <div className="flex h-screen flex-col">
+      <ChatHeader projectId={params.projectId} />
+      <ChatBody projectId={params.projectId} />
     </div>
   );
-};
-
-export default ChatPage;
+}
 
 const Project = ({project}: {project: ProjectFull}) => {
   const chat = {
