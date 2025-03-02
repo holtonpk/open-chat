@@ -3,25 +3,17 @@
 import {db} from "@/config/firebase";
 import {doc, onSnapshot} from "firebase/firestore";
 import Markdown from "react-markdown";
-import {useEffect, useState, use, Usable, useId} from "react";
+import {useEffect, useState} from "react";
 
 import {ChatBody} from "./chat-body";
-
 import {getDoc} from "firebase/firestore";
 import {Loader} from "lucide-react";
 import Link from "next/link";
 import {ProjectFull} from "@/lib/types";
 
-interface PageProps {
-  params: {
-    projectId: string;
-  };
-}
-
-export default function ChatPage({params}: PageProps) {
+const ChatPage = ({params}: {params: {projectId: string}}) => {
   const [project, setProject] = useState<ProjectFull | null>(null);
-  const unwrappedParams = use(params as unknown as Usable<{projectId: string}>);
-  const projectId = unwrappedParams.projectId;
+  const projectId = params.projectId;
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -52,15 +44,17 @@ export default function ChatPage({params}: PageProps) {
   console.log("pp", project);
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* <ChatHeader projectId={params.projectId} /> */}
-      {loading ? (
-        <div className="flex-1 flex items-center justify-center">
+    <div className="w-full relative overflow-hidden">
+      {project && !loading ? (
+        // <Project project={project} />
+        <ChatBody project={project} />
+      ) : (
+        <div className="w-full h-screen flex flex-col items-center justify-center">
           <Loader className="w-10 h-10 animate-spin" />
         </div>
-      ) : (
-        <>{project && <ChatBody project={project} />}</>
       )}
     </div>
   );
-}
+};
+
+export default ChatPage;
