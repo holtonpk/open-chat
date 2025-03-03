@@ -1,6 +1,6 @@
 import {Ellipsis, Pencil, Trash, Loader, Plus} from "lucide-react";
 import Link from "next/link";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 import {
   DropdownMenu,
@@ -64,7 +64,7 @@ export const ProjectsList = ({projects}: {projects: ProjectType[]}) => {
   };
 
   return (
-    <div className="flex mt-2 w-full  flex-col gap-1 items-start">
+    <div className="flex  w-full  flex-col gap-1 items-start">
       {projects.map((project, i) => (
         <Project
           key={project.id}
@@ -157,6 +157,10 @@ const Project = ({
   );
 
   const [name, setName] = useState<string>(project.name);
+
+  useEffect(() => {
+    setName(project.name);
+  }, [project.name]);
 
   const [isSaving, setIsSaving] = useState(false);
 

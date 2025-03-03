@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import {Input} from "@/components/ui/input";
 import {db} from "@/config/firebase";
-import {Loader2, Plus, Search, Trash} from "lucide-react";
+import {Loader2, Plus, Search, Trash, Copy} from "lucide-react";
 import {ActionSearchBar} from "@/components/action-search-bar";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
@@ -139,10 +139,26 @@ const ModelCard = ({
     const project = await createProject();
     router.push(`/chat/${project.id}`);
   };
+
+  const copyModelObject = () => {
+    navigator.clipboard.writeText(
+      JSON.stringify({
+        image:
+          savedProviders &&
+          savedProviders.find((provider) => model.id.includes(provider.id))
+            ?.img,
+        model,
+      })
+    );
+  };
+
   return (
     <div
       className={`flex flex-col gap-2 w-full h-full items-start  border rounded-md p-4 bg-background shadow-md `}
     >
+      <button onClick={copyModelObject}>
+        <Copy className="w-4 h-4" />
+      </button>
       <div className="grid grid-cols-[32px_1fr] gap-2 items-start">
         <Avatar className="h-8 w-8 mx-auto border rounded-full  overflow-hidden p-1 shadow-sm mt-1">
           <AvatarImage

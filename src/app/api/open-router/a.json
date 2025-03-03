@@ -1,26 +1,7 @@
 {
-  "id": "gen-1740910236-TXVxLg9cDDqpOjNk78wl",
-  "provider": "OpenAI",
-  "model": "openai/gpt-4o",
-  "object": "chat.completion",
-  "created": 1740910236,
-  "choices": [
-    {
-      "logprobs": null,
-      "finish_reason": "stop",
-      "native_finish_reason": "stop",
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "The comparison between oral nicotine pouches and vaping depends on various factors including health risks, costs, and personal preferences.\n\n1. **Health Risks**: Both nicotine pouches and vaping involve health risks. Oral nicotine pouches can irritate gums and potentially affect cheek cells, although longer-term effects are not well understood yet. Nicotine, as a stimulant, can cause an upset stomach and other side effects [yalemedicine.org](https://www.yalemedicine.org/news/nicotine-pouches). Additionally, these pouches can be addictive, especially among young users who may also smoke or vape, increasing their risk of nicotine addiction [truthinitiative.org](https://truthinitiative.org/research-resources/emerging-tobacco-products/can-oral-nicotine-pouches-zyn-help-people-quit-vaping).\n\n2. **Cost**: Nicotine pouches are generally considered to be more cost-effective than vaping. Vaping requires purchasing a device, coils, and refills, which can become expensive over time, especially if the device needs repair or replacement due to damage [snusdaddy.com](https://snusdaddy.com/inspiration/are-nicotine-pouches-better-than-vaping).\n\n3. **Convenience and Discretion**: Nicotine pouches offer the advantage of being discreet and can be used in places where vaping might not be allowed, such as public transport or in offices [haypp.com](https://www.haypp.com/uk/nicopedia/review/nicotine-pouches-vs-vapes).\n\nIn conclusion, while neither option is without risk, nicotine pouches might be more discreet and cost-effective, whereas vaping allows users to control their nicotine intake more closely. Consideration of individual health, financial situation, and lifestyle preferences is essential when choosing between the two.",
-        "refusal": null
-      }
-    }
-  ],
-  "system_fingerprint": "fp_eb9dce56a8",
-  "usage": {
-    "prompt_tokens": 1703,
-    "completion_tokens": 368,
-    "total_tokens": 2071
+  "name": {
+    "role": "assistant",
+    "content": "{\n  \"name\": \"Square Root of 144\"\n}",
+    "refusal": null
   }
 }

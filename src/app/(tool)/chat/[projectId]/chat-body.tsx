@@ -57,7 +57,7 @@ import {Avatar, AvatarImage} from "@radix-ui/react-avatar";
 export function ChatBody({project}: {project: ProjectFull}) {
   const [isOnline, setIsOnline] = useState(false);
 
-  const [messages, setMessages] = useState<Message[]>(project.messages);
+  const [messages, setMessages] = useState<Message[]>(project.messages || []);
 
   const [savedProviders, setSavedProviders] = useState<any[]>([]);
   const [input, setInput] = useState("");
@@ -147,10 +147,11 @@ export function ChatBody({project}: {project: ProjectFull}) {
       }
     };
 
-    const newUserMessage = createMessage(message, "user", project.models[0]);
-    setMessages((prev) => [...(prev || []), newUserMessage]);
+    const safeMessages = Array.isArray(messages) ? messages : [];
 
-    // Set loading states for each model
+    const newUserMessage = createMessage(message, "user", project.models[0]);
+    setMessages([...safeMessages, newUserMessage]);
+
     setLoadingStates(
       project.models.map((model) => ({
         modelId: model.id,
@@ -159,19 +160,17 @@ export function ChatBody({project}: {project: ProjectFull}) {
     );
 
     try {
-      // Create an array of promises for each model's API call
       const modelPromises = project.models.map(async (model) => {
         const response = await fetch("/api/open-router", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
-            messages: [
-              ...(messages?.map((m) => ({
+            messages: [...safeMessages, {role: "user", content: message}].map(
+              (m) => ({
                 role: m.role,
                 content: m.content,
-              })) || []),
-              {role: "user", content: message},
-            ],
+              })
+            ),
             model: model.id,
             isOnline,
           }),
@@ -194,22 +193,20 @@ export function ChatBody({project}: {project: ProjectFull}) {
         );
       });
 
-      // Wait for all API calls to complete
       const newAssistantMessages = await Promise.all(modelPromises);
 
-      // Update messages with responses (removed duplicate user message)
-      setMessages((prev) => [...prev, ...newAssistantMessages]);
+      // Update messages with responses
+      setMessages([...safeMessages, newUserMessage, ...newAssistantMessages]);
 
-      // Update Firestore (removed duplicate user message)
+      // Update Firestore
       const projectRef = doc(db, "projects", project.id);
       await updateDoc(projectRef, {
-        messages: [...messages, newUserMessage, ...newAssistantMessages],
+        messages: [...safeMessages, newUserMessage, ...newAssistantMessages],
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      // Handle error appropriately
     } finally {
-      setLoadingStates([]); // Clear all loading states
+      setLoadingStates([]);
     }
   };
 
@@ -292,6 +289,33 @@ export function ChatBody({project}: {project: ProjectFull}) {
     const domain = new URL(url).hostname;
     return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
   };
+
+  // wait 2 seconds after the first message has been sent and then generate a name for the chat
+
+  const generateName = async () => {
+    const response = await fetch("/api/generate-name", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: messages.map((m) => ({
+          content: m.content,
+          role: m.role,
+        })),
+      }),
+    });
+    const data = await response.json();
+    console.log("generated name ======>", data);
+    updateDoc(doc(db, "projects", project.id), {
+      name: data.name,
+    });
+  };
+
+  useEffect(() => {
+    if (messages.length > 0 && project.name === "Untitled Project") {
+      setTimeout(() => {
+        generateName();
+      }, 2000);
+    }
+  }, [messages]);
 
   return (
     <div className=" w-full  flex flex-col relative h-screen overflow-hidden ">
