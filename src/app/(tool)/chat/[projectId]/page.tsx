@@ -1,5 +1,13 @@
 import ChatWrapper from "./chat-wrapper";
-const ChatPage = async ({params}: {params: {projectId: string}}) => {
+
+interface PageProps {
+  params: {
+    projectId: string;
+  };
+  searchParams?: {[key: string]: string | string[] | undefined};
+}
+
+const ChatPage = async ({params}: PageProps) => {
   return <ChatWrapper projectId={params.projectId} />;
 };
 
